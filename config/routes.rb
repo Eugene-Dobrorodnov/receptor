@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :recipes do
+    resources :recipe_step
+  end
   devise_for :users
   ActiveAdmin.routes(self)
   # The priority is based upon order of creation: first created -> highest priority.
