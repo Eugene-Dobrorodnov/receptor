@@ -1,7 +1,9 @@
 class RecipesController < ApplicationController
-  before_action :get_recipe, only: %i(show edit update destroy)
+  before_action :get_recipe,         only: %i(show edit update destroy)
+  before_action :authenticate_user!, only: %i(create new edit update destroy)
 
   def index
+    @recipes = Recipe.all
   end
 
   def show
@@ -9,11 +11,12 @@ class RecipesController < ApplicationController
 
   def new
     @recipe = Recipe.new
-    2.times { @recipe.steps.build}
+    3.times { @recipe.steps.build}
   end
 
   def create
-    @recipe = Recipe.create(recipe_params)
+    @recipe = Recipe.create recipe_params
+    @recipe.user = current_user
     if @recipe.save
       redirect_to @recipe
     else
@@ -25,9 +28,17 @@ class RecipesController < ApplicationController
   end
 
   def update
+    @recipe.user = current_user
+    if @recipe.update recipe_params
+      redirect_to @recipe
+    else
+      render 'edit'
+    end
   end
 
   def destroy
+    @recipe.destroy
+    redirect_to root_url
   end
 
   private

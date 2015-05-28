@@ -1,0 +1,7 @@
+<h2><%= @recipe.title %></h2>
+
+<%= @recipe.description %>
+
+<% @recipe.steps.each do |step| %>
+  <%= step.title %>
+<% end %>
